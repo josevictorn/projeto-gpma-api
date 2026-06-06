@@ -13,6 +13,7 @@ import {
 import { ZodError, z } from "zod";
 import { AppError } from "@/core/errors";
 import { env } from "@/env";
+import { usersModule } from "@/modules/users/module";
 
 const app = fastify().withTypeProvider<ZodTypeProvider>();
 
@@ -29,6 +30,7 @@ app.setSerializerCompiler(serializerCompiler);
 app.register(fastifyCors, {
 	origin: true,
 	methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+	credentials: true,
 });
 
 app.register(fastifySwagger, {
@@ -38,6 +40,20 @@ app.register(fastifySwagger, {
 			description: "An API for law firm management.",
 			version: "1.0.0",
 		},
+		components: {
+			securitySchemes: {
+				bearerAuth: {
+					type: "http",
+					scheme: "bearer",
+					bearerFormat: "JWT",
+				},
+			},
+		},
+		security: [
+			{
+				bearerAuth: [],
+			},
+		],
 	},
 	transform: jsonSchemaTransform,
 });
@@ -45,6 +61,8 @@ app.register(fastifySwagger, {
 app.register(ScalarApiReference, {
 	routePrefix: "/docs",
 });
+
+app.register(usersModule);
 
 app.setErrorHandler((error, _, reply) => {
 	if (hasZodFastifySchemaValidationErrors(error)) {
