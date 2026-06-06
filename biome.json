@@ -18,6 +18,12 @@
       "recommended": true,
       "style": {
         "noParameterProperties": "off"
+      },
+      "performance": {
+        "noBarrelFile": "off"
+      },
+      "suspicious": {
+        "useAwait": "off"
       }
     }
   },
