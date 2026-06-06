@@ -9,10 +9,12 @@ export class NodemailerMailProvider implements MailProvider {
 	private readonly transporter = nodemailer.createTransport({
 		host: env.SMTP_HOST,
 		port: env.SMTP_PORT,
-		auth: {
-			user: env.SMTP_USER,
-			pass: env.SMTP_PASS,
-		},
+		auth: env.SMTP_USER
+			? {
+					user: env.SMTP_USER,
+					pass: env.SMTP_PASS,
+				}
+			: undefined,
 	});
 
 	async sendMail(to: string, subject: string, body: string): Promise<void> {
