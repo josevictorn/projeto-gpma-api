@@ -12,6 +12,7 @@ const envSchema = z.object({
 	SMTP_USER: z.string(),
 	SMTP_PASS: z.string(),
 	SMTP_FROM: z.string().default("Vero <no-reply@vero.com>"),
+	WEB_URL: z.string().url().default("http://localhost:5173"),
 });
 
 const _env = envSchema.safeParse(process.env);
