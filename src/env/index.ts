@@ -7,6 +7,11 @@ const envSchema = z.object({
 	JWT_SECRET: z.string(),
 	DATABASE_URL: z.url(),
 	DATABASE_SCHEMA: z.string().default("public"),
+	SMTP_HOST: z.string(),
+	SMTP_PORT: z.coerce.number().default(587),
+	SMTP_USER: z.string(),
+	SMTP_PASS: z.string(),
+	SMTP_FROM: z.string().default("Vero <no-reply@vero.com>"),
 });
 
 const _env = envSchema.safeParse(process.env);
