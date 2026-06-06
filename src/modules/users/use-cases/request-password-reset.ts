@@ -45,7 +45,7 @@ export class RequestPasswordResetUseCase {
 			expiresAt,
 		});
 
-		const resetLink = `${env.WEB_URL}/reset-password?token=${token}`;
+		const resetLink = `${env.WEB_URL}/change-password?token=${token}`;
 
 		// Envia e-mail com o link de redefinição
 		const subject = "Redefinição de senha - Vero";
