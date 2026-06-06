@@ -38,3 +38,16 @@ export const userResponseSchema = z.object({
 	role: z.string(),
 	created_at: z.date(),
 });
+
+export const passwordResetTokens = pgTable("password_reset_tokens", {
+	id: uuid("id").primaryKey().defaultRandom(),
+	token: text("token").notNull().unique(),
+	userId: uuid("user_id")
+		.notNull()
+		.references(() => users.id, { onDelete: "cascade" }),
+	expiresAt: timestamp("expires_at").notNull(),
+	createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export type PasswordResetToken = typeof passwordResetTokens.$inferSelect;
+export type NewPasswordResetToken = typeof passwordResetTokens.$inferInsert;

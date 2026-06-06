@@ -138,7 +138,6 @@ export class DeleteUseCase<TSelect> implements IUseCase<{ id: string }, null> {
 	}
 }
 
-
 /**
  * Use Case genérico para obter uma lista paginada de entidades.
  * @param repository Repositório da entidade
