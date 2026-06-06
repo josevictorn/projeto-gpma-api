@@ -4,6 +4,7 @@
     "@fastify/jwt": "^10.1.0",
     "@fastify/swagger": "^9.7.0",
     "@scalar/fastify-api-reference": "^1.58.0",
+    "argon2": "^0.44.0",
     "dotenv": "^17.4.2",
     "drizzle-orm": "^0.45.2",
     "fastify": "^5.8.5",
