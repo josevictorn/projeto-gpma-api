@@ -1,2 +1,8 @@
 node_modules
+dist
 .env
+*.log
+coverage
+.tsbuildinfo
+.DS_Store
+Thumbs.db

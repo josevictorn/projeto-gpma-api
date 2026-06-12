@@ -1,5 +1,6 @@
 import type { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import z from "zod";
+import { verifyJWT } from "@/core/middleware";
 import { NotFoundError } from "@/core/errors";
 import { userPresenter } from "../presenter";
 import { UsersRepository } from "../repository";
@@ -10,6 +11,7 @@ export const ProfileController: FastifyPluginAsyncZod = async (app) => {
 	app.get(
 		"/users/profile",
 		{
+			onRequest: [verifyJWT],
 			schema: {
 				tags: ["users"],
 				summary: "Get the authenticated user's profile",
