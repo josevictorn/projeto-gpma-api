@@ -13,6 +13,8 @@ import {
 import { ZodError, z } from "zod";
 import { AppError } from "@/core/errors";
 import { env } from "@/env";
+// 1. Importação do rolesModule
+import { rolesModule } from "@/modules/roles/module";
 import { usersModule } from "@/modules/users/module";
 
 const app = fastify().withTypeProvider<ZodTypeProvider>();
@@ -63,6 +65,8 @@ app.register(ScalarApiReference, {
 });
 
 app.register(usersModule);
+// 2. Registo do rolesModule na aplicação
+app.register(rolesModule);
 
 app.setErrorHandler((error, _, reply) => {
 	if (hasZodFastifySchemaValidationErrors(error)) {
