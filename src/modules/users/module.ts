@@ -27,7 +27,7 @@ const usersCrud = defineModule({
 	repository: new UsersRepository(users, users.id),
 	presenter: userPresenter,
 	middlewares: [verifyJWT],
-	except: ["create", "delete"],
+	except: ["create"],
 });
 
 export async function usersModule(app: FastifyInstance) {
