@@ -1,7 +1,7 @@
 import type { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import z from "zod";
-import { verifyJWT } from "@/core/middleware";
 import { NotFoundError } from "@/core/errors";
+import { verifyJWT } from "@/core/middleware";
 import { userPresenter } from "../presenter";
 import { UsersRepository } from "../repository";
 import { userResponseSchema, users } from "../schema";
