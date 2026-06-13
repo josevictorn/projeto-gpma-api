@@ -13,7 +13,7 @@ import {
 import { ZodError, z } from "zod";
 import { AppError } from "@/core/errors";
 import { env } from "@/env";
-// 1. Importação do rolesModule
+import { leadsModule } from "@/modules/leads/module";
 import { rolesModule } from "@/modules/roles/module";
 import { usersModule } from "@/modules/users/module";
 
@@ -65,8 +65,8 @@ app.register(ScalarApiReference, {
 });
 
 app.register(usersModule);
-// 2. Registo do rolesModule na aplicação
 app.register(rolesModule);
+app.register(leadsModule);
 
 app.setErrorHandler((error, _, reply) => {
 	if (hasZodFastifySchemaValidationErrors(error)) {
