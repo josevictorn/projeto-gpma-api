@@ -1,0 +1,22 @@
+CREATE TABLE "clients" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"name" text NOT NULL,
+	"email" text NOT NULL,
+	"phone" text NOT NULL,
+	"marital_status" text NOT NULL,
+	"profession" text NOT NULL,
+	"cpf" text NOT NULL,
+	"rg" text NOT NULL,
+	"issuing_agency" text NOT NULL,
+	"street" text NOT NULL,
+	"number" text NOT NULL,
+	"neighborhood" text NOT NULL,
+	"city" text NOT NULL,
+	"state" text NOT NULL,
+	"zip_code" text NOT NULL,
+	"created_at" timestamp DEFAULT now(),
+	"updated_at" timestamp DEFAULT now(),
+	CONSTRAINT "clients_email_unique" UNIQUE("email"),
+	CONSTRAINT "clients_cpf_unique" UNIQUE("cpf"),
+	CONSTRAINT "clients_rg_unique" UNIQUE("rg")
+);
