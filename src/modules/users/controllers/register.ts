@@ -1,4 +1,4 @@
-import type { FastifyPluginAsyncZod } from "node_modules/fastify-type-provider-zod/dist/esm/core";
+import type { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import { z } from "zod";
 import { ConflictError } from "@/core/errors";
 import { UsersRepository } from "../repository";
