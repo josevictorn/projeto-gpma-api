@@ -72,10 +72,11 @@ export class DrizzleRepository<
 	async save(data: TSelect): Promise<TSelect> {
 		const record = data as Record<string, unknown>;
 		const pkValue = record[this.pkColumn.name] as string;
+		const table = this.table as PgTable;
 
 		const rows = await db
-			.update(this.table)
-			.set(record as Partial<InferInsertModel<TTable>>)
+			.update(table)
+			.set(record)
 			.where(eq(this.pkColumn, pkValue))
 			.returning();
 
