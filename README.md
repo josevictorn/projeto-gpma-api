@@ -244,6 +244,18 @@ Isso sobe:
 pnpm db:migrate
 ```
 
+> ⚠️ **Passo obrigatório.** O `pnpm install` **não** aplica migrações — ele apenas
+> instala dependências. As migrações em `drizzle/migrations/` só existem no banco
+> depois que `pnpm db:migrate` é executado.
+>
+> Rode `pnpm db:migrate` sempre que:
+> - subir o ambiente pela primeira vez;
+> - fizer `git pull` e surgirem novos arquivos em `drizzle/migrations/`;
+> - recriar o container do PostgreSQL (`docker compose down -v`).
+>
+> Sintoma de migração pendente: requisições retornam **500** e o log mostra
+> `relation "<tabela>" does not exist`.
+
 ### 6. Inicie o servidor
 
 ```bash
