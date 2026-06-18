@@ -11,7 +11,7 @@ import {
 	type ZodTypeProvider,
 } from "fastify-type-provider-zod";
 import { ZodError, z } from "zod";
-import { AppError } from "@/core/errors";
+import { AppError, mapUniqueViolation } from "@/core/errors";
 import { env } from "@/env";
 import { casesModule } from "@/modules/cases/module";
 import { clientsModule } from "@/modules/clients/module";
@@ -89,6 +89,13 @@ app.setErrorHandler((error, _, reply) => {
 
 	if (error instanceof AppError) {
 		return reply.status(error.statusCode).send({ message: error.message });
+	}
+
+	const uniqueError = mapUniqueViolation(error);
+	if (uniqueError) {
+		return reply
+			.status(uniqueError.statusCode)
+			.send({ message: uniqueError.message });
 	}
 
 	if (env.NODE_ENV === "production") {

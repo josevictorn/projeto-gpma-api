@@ -1,3 +1,5 @@
+import { DatabaseError } from "pg";
+
 /**
  * Erro genérico que pode ser lançado pelo UseCase.
  * Deve ser capturado pelo Controller e retornado como resposta HTTP.
@@ -99,4 +101,106 @@ export class InvalidPageError extends ValidationError {
 	constructor() {
 		super("Page number must be greater than 0.");
 	}
+}
+
+/**
+ * Erro de violação de constraint de unicidade do PostgreSQL (code 23505).
+ * Retornado como 409 Conflict quando um valor único (email, cpf, rg, etc.)
+ * já existe no banco.
+ * @param message Mensagem amigável (opcional)
+ * @return UniqueConstraintError
+ */
+export class UniqueConstraintError extends AppError {
+	readonly statusCode = 409;
+
+	constructor(message = "Registro já cadastrado.") {
+		super(message);
+	}
+}
+
+/** Código SQLSTATE do PostgreSQL para violação de unicidade. */
+const PG_UNIQUE_VIOLATION = "23505";
+
+/** Rótulos amigáveis (PT-BR) para os campos únicos conhecidos. */
+const UNIQUE_FIELD_LABELS: Record<string, string> = {
+	email: "E-mail",
+	cpf: "CPF",
+	rg: "RG",
+};
+
+/**
+ * Extrai a coluna do `detail` do Postgres, ex: `Key (email)=(...) already exists.`
+ * Independente de idioma (o `lc_messages` pode estar em PT-BR: `Chave (email)=(...)`).
+ */
+const PG_DETAIL_KEY_REGEX = /\(([^)]+)\)=\(/;
+
+/** Sufixo das constraints únicas geradas pelo Drizzle (`<tabela>_<coluna>_unique`). */
+const UNIQUE_CONSTRAINT_SUFFIX_REGEX = /_unique$/;
+
+/**
+ * Extrai o nome da coluna que violou a constraint única.
+ * Tenta primeiro o `detail` (ex: `Key (email)=(...) already exists.`),
+ * caindo para o nome da constraint (`<tabela>_<coluna>_unique`).
+ */
+function extractUniqueField(error: DatabaseError): string | null {
+	const detailMatch = error.detail?.match(PG_DETAIL_KEY_REGEX);
+	if (detailMatch) {
+		return detailMatch[1].split(", ")[0];
+	}
+
+	const { constraint, table } = error;
+	if (!constraint) {
+		return null;
+	}
+
+	let name = constraint;
+	if (table && name.startsWith(`${table}_`)) {
+		name = name.slice(table.length + 1);
+	}
+	name = name.replace(UNIQUE_CONSTRAINT_SUFFIX_REGEX, "");
+
+	return name || null;
+}
+
+/**
+ * Localiza o `DatabaseError` do pg dentro do erro recebido. O Drizzle envolve os
+ * erros do driver em um `DrizzleQueryError`, expondo o erro original em `cause`,
+ * então percorremos a cadeia de `cause` até encontrar o `DatabaseError`.
+ */
+function findDatabaseError(error: unknown): DatabaseError | null {
+	let current = error;
+	while (current) {
+		if (current instanceof DatabaseError) {
+			return current;
+		}
+		current = (current as { cause?: unknown }).cause;
+	}
+	return null;
+}
+
+/**
+ * Converte uma violação de unicidade do PostgreSQL em um `UniqueConstraintError`
+ * com mensagem amigável. Retorna `null` se o erro não for desse tipo.
+ *
+ * Centraliza o tratamento para todos os módulos com colunas únicas, evitando
+ * que o erro caia no handler genérico (500).
+ * @example
+ * const conflict = mapUniqueViolation(error);
+ * if (conflict) return reply.status(conflict.statusCode).send({ message: conflict.message });
+ */
+export function mapUniqueViolation(
+	error: unknown
+): UniqueConstraintError | null {
+	const dbError = findDatabaseError(error);
+	if (!dbError || dbError.code !== PG_UNIQUE_VIOLATION) {
+		return null;
+	}
+
+	const field = extractUniqueField(dbError);
+	if (!field) {
+		return new UniqueConstraintError();
+	}
+
+	const label = UNIQUE_FIELD_LABELS[field] ?? field;
+	return new UniqueConstraintError(`${label} já cadastrado.`);
 }
