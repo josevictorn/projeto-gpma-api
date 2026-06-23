@@ -1,4 +1,5 @@
 import { verifyJWT } from "@/core/middleware";
+import { forbidClientAll } from "@/core/middlewares/forbid-client";
 import { defineModule } from "@/core/module";
 import {
 	clients,
@@ -16,5 +17,5 @@ export const clientsModule = defineModule({
 		edit: updateClientSchema,
 		response: responseClientSchema,
 	},
-	middlewares: [verifyJWT],
+	middlewares: [verifyJWT, forbidClientAll],
 });

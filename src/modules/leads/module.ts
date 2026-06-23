@@ -1,4 +1,5 @@
 import { verifyJWT } from "@/core/middleware";
+import { forbidClientAll } from "@/core/middlewares/forbid-client";
 import { defineModule } from "@/core/module";
 import {
 	createLeadSchema,
@@ -16,5 +17,5 @@ export const leadsModule = defineModule({
 		edit: updateLeadSchema,
 		response: responseLeadSchema,
 	},
-	middlewares: [verifyJWT],
+	middlewares: [verifyJWT, forbidClientAll],
 });
