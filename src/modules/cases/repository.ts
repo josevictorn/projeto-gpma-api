@@ -17,4 +17,18 @@ export class CasesRepository extends DrizzleRepository<typeof cases> {
 
 		return { items: rows as unknown as any[], total: totalRow.total };
 	}
+
+	async findManyByLawyerId(params: { page: number; lawyerId: string }) {
+		const perPage = params.page ? params.page : 1;
+		const offset = (params.page - 1) * 10;
+
+		const table = this.table as typeof cases;
+
+		const [rows, [totalRow]] = await Promise.all([
+			db.select().from(table).where(eq(table.assignedLawyerId, params.lawyerId)).limit(10).offset(offset),
+			db.select({ total: count() }).from(table).where(eq(table.assignedLawyerId, params.lawyerId)),
+		]);
+
+		return { items: rows as unknown as any[], total: totalRow.total };
+	}
 }

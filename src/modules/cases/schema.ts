@@ -2,6 +2,7 @@ import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { clients } from "../schemas";
+import { users } from "../users/schema";
 
 export const caseStatusEnum = ["OPEN", "CLOSED", "PENDING"] as const;
 
@@ -13,6 +14,9 @@ export const cases = pgTable("cases", {
 	clientId: uuid("client_id")
 		.notNull()
 		.references(() => clients.id, { onDelete: "cascade" }),
+	assignedLawyerId: uuid("assigned_lawyer_id")
+		.nullable()
+		.references(() => users.id, { onDelete: "set null" }),
 	createdAt: timestamp("created_at").defaultNow(),
 	updatedAt: timestamp("updated_at")
 		.defaultNow()
@@ -34,6 +38,7 @@ export const responseCaseSchema = createCaseSchema
 	.extend({
 		id: z.uuid(),
 		client_id: z.uuid(),
+		assigned_lawyer_id: z.union([z.string().uuid(), z.null()]),
 		created_at: z.date(),
 		updated_at: z.date(),
 	});
