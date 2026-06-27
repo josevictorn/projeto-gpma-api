@@ -1,3 +1,5 @@
+name: vero-api-gpma
+
 services:
   postgres:
     container_name: vero-api-gpma-postgres
@@ -10,7 +12,7 @@ services:
       POSTGRES_DB: vero_api
 
   mailpit:
-    container_name: vero-mailpit
+    container_name: vero-mailpit-gpma
     image: axllent/mailpit:latest
     ports:
       - "8025:8025"

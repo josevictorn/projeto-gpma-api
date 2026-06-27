@@ -1,5 +1,6 @@
 import { verifyJWT } from "@/core/middleware";
 import { defineModule } from "@/core/module";
+import { GetClientHistoryController } from "./controllers/get-history";
 import {
 	clients,
 	createClientSchema,
@@ -17,4 +18,7 @@ export const clientsModule = defineModule({
 		response: responseClientSchema,
 	},
 	middlewares: [verifyJWT],
+	extraRoutes: async (app) => {
+		await app.register(GetClientHistoryController);
+	},
 });
