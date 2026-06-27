@@ -13,6 +13,7 @@ import {
 import { ZodError, z } from "zod";
 import { AppError, mapUniqueViolation } from "@/core/errors";
 import { env } from "@/env";
+import { caseUpdatesModule } from "@/modules/case-updates/module";
 import { casesModule } from "@/modules/cases/module";
 import { clientsModule } from "@/modules/clients/module";
 import { leadsModule } from "@/modules/leads/module";
@@ -71,6 +72,7 @@ app.register(rolesModule);
 app.register(leadsModule);
 app.register(clientsModule);
 app.register(casesModule);
+app.register(caseUpdatesModule);
 
 app.setErrorHandler((error, _, reply) => {
 	if (hasZodFastifySchemaValidationErrors(error)) {
