@@ -15,3 +15,17 @@ export async function verifyJWT(request: FastifyRequest, reply: FastifyReply) {
 		return reply.status(401).send({ message: "Unauthorized." });
 	}
 }
+
+/**
+ * Verifica se o usuário possui uma das roles permitidas.
+ * @param allowedRoles Lista de roles permitidas
+ * @returns Hook handler do Fastify
+ */
+export function verifyRole(allowedRoles: string[]) {
+	return async (request: FastifyRequest, reply: FastifyReply) => {
+		const user = request.user as { role: string } | undefined;
+		if (!(user && allowedRoles.includes(user.role))) {
+			return reply.status(403).send({ message: "Forbidden." });
+		}
+	};
+}

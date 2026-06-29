@@ -126,6 +126,7 @@ const UNIQUE_FIELD_LABELS: Record<string, string> = {
 	email: "E-mail",
 	cpf: "CPF",
 	rg: "RG",
+	name: "Nome",
 };
 
 /**
