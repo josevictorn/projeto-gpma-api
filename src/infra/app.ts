@@ -17,6 +17,7 @@ import { caseUpdatesModule } from "@/modules/case-updates/module";
 import { casesModule } from "@/modules/cases/module";
 import { clientsModule } from "@/modules/clients/module";
 import { leadsModule } from "@/modules/leads/module";
+import { paymentMethodsModule } from "@/modules/payment-methods/module";
 import { rolesModule } from "@/modules/roles/module";
 import { usersModule } from "@/modules/users/module";
 
@@ -73,6 +74,7 @@ app.register(leadsModule);
 app.register(clientsModule);
 app.register(casesModule);
 app.register(caseUpdatesModule);
+app.register(paymentMethodsModule);
 
 app.setErrorHandler((error, _, reply) => {
 	if (hasZodFastifySchemaValidationErrors(error)) {

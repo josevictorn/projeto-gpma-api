@@ -50,6 +50,13 @@
       "when": 1782519349820,
       "tag": "0006_faithful_zarda",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1782762682715,
+      "tag": "0007_dusty_tarot",
+      "breakpoints": true
     }
   ]
 }
