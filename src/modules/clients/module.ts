@@ -1,6 +1,7 @@
 import { verifyJWT } from "@/core/middleware";
 import { defineModule } from "@/core/module";
 import { GetClientHistoryController } from "./controllers/get-history";
+import { ClientsRepository } from "./repository";
 import {
 	clients,
 	createClientSchema,
@@ -12,6 +13,7 @@ export const clientsModule = defineModule({
 	resource: "clients",
 	singular: "client",
 	table: clients,
+	repository: new ClientsRepository(clients, clients.id),
 	schemas: {
 		create: createClientSchema,
 		edit: updateClientSchema,
