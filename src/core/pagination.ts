@@ -1,6 +1,7 @@
 export interface PaginationParams {
 	page: number;
 	perPage?: number;
+	search?: string;
 }
 
 export interface PaginatedResult<T> {

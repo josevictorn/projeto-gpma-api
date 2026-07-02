@@ -152,7 +152,7 @@ export class DeleteUseCase<TSelect> implements IUseCase<{ id: string }, null> {
  */
 export class FetchUseCase<TSelect>
 	implements
-		IUseCase<{ page: number }, { items: TSelect[]; meta: PaginationMeta }>
+		IUseCase<{ page: number; search?: string }, { items: TSelect[]; meta: PaginationMeta }>
 {
 	constructor(
 		protected readonly repository: IRepository<TSelect>,
@@ -161,12 +161,13 @@ export class FetchUseCase<TSelect>
 
 	async execute(input: {
 		page: number;
+		search?: string;
 	}): Promise<Either<AppError, { items: TSelect[]; meta: PaginationMeta }>> {
 		if (input.page < 1) {
 			return left(new InvalidPageError());
 		}
 
-		const result = await this.repository.findMany({ page: input.page });
+		const result = await this.repository.findMany({ page: input.page, search: input.search });
 
 		return right({
 			items: result.items,

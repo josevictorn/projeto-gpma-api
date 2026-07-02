@@ -144,6 +144,7 @@ export function createCrudController<
 						summary: `List ${resource} (paginated)`,
 						querystring: z.object({
 							page: z.coerce.number().int().positive().default(1),
+							search: z.string().optional(),
 						}),
 						response: {
 							200: z.object({
@@ -159,10 +160,9 @@ export function createCrudController<
 					},
 				},
 				async (request, reply) => {
-					const { page } = request.query;
+				const { page, search } = request.query;
 
-					const result = await useCases.fetch.execute({ page });
-
+				const result = await useCases.fetch.execute({ page, search });
 					if (result.isLeft()) {
 						return handleError(result.value, reply);
 					}
